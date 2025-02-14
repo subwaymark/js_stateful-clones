@@ -7,20 +7,20 @@
  * @return {Object[]}
  */
 function transformStateWithClones(state, actions) {
-  const result = [];
+  const result = [{ ...state }];
 
   actions.forEach((action, i) => {
     const previousIndex = i - 1 < 0 ? i : i - 1;
 
     switch (action.type) {
       case 'clear':
-        result.push({});
+        result[i] = {};
         break;
       case 'addProperties':
-        result.push({
+        result[i] = {
           ...result[previousIndex],
           ...action.extraData,
-        });
+        };
         break;
       case 'removeProperties':
         const previousState = { ...result[previousIndex] };
@@ -29,7 +29,7 @@ function transformStateWithClones(state, actions) {
           delete previousState[key];
         });
 
-        result.push({ ...previousState });
+        result[i] = { ...previousState };
         break;
       default:
         result.push({
